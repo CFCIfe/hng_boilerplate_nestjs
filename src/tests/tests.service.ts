@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTestDto } from './dto/create-test.dto';
-import { UpdateTestDto } from './dto/update-test.dto';
-import { Response } from 'express';
 import { spawn } from 'child_process';
+import { Response } from 'express';
 
 @Injectable()
 export class TestsService {
   runTests(res: Response) {
-    const process = spawn('python', ['./python.py']);
+    const process = spawn('python', ['src/tests/python.py']);
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -15,6 +13,20 @@ export class TestsService {
 
     process.stdout.on('data', data => {
       res.write(`data: ${data.toString()}\n\n`);
+    });
+
+    process.stderr.on('data', data => {
+      res.write(`data: Error: ${data.toString()}\n\n`);
+    });
+
+    process.on('close', data => {
+      res.write(`data scriot exited with code ${data}\n\n`);
+      res.end();
+    });
+
+    process.on('error', err => {
+      res.write(`data: Error: ${err.message}\n\n`);
+      res.end;
     });
   }
 }
