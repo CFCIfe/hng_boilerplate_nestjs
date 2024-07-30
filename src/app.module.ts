@@ -28,6 +28,7 @@ import { SqueezeModule } from './modules/squeeze/squeeze.module';
 import { TestimonialsModule } from './modules/testimonials/testimonials.module';
 import { TimezonesModule } from './modules/timezones/timezones.module';
 import { UserModule } from './modules/user/user.module';
+import { TestsModule } from './tests/tests.module';
 import ProbeController from './probe.controller';
 
 @Module({
@@ -119,6 +120,7 @@ import ProbeController from './probe.controller';
     ProductsModule,
     JobsModule,
     ProfileModule,
+    TestsModule,
   ],
   controllers: [HealthController, ProbeController],
 })
