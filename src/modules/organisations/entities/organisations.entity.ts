@@ -1,11 +1,11 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
-import { User } from '../../user/entities/user.entity';
-import { OrganisationPreference } from './org-preferences.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { AbstractBaseEntity } from '../../../entities/base.entity';
-import { Invite } from '../../invite/entities/invite.entity';
-import { OrganisationMember } from './org-members.entity';
 import { Product } from '../../../modules/products/entities/product.entity';
+import { Invite } from '../../invite/entities/invite.entity';
 import { OrganisationRole } from '../../organisation-role/entities/organisation-role.entity';
+import { User } from '../../user/entities/user.entity';
+import { OrganisationMember } from './org-members.entity';
+import { OrganisationPreference } from './org-preferences.entity';
 
 @Entity()
 export class Organisation extends AbstractBaseEntity {
@@ -18,22 +18,22 @@ export class Organisation extends AbstractBaseEntity {
   @Column({ unique: true, nullable: false })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: '' })
   industry: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: '' })
   type: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: '' })
   country: string;
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: false, default: '' })
   address: string;
 
   @ManyToOne(() => User, user => user.owned_organisations, { nullable: false })
   owner: User;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: '' })
   state: string;
 
   @ManyToOne(() => User, user => user.created_organisations, { nullable: false })

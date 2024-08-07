@@ -1,23 +1,23 @@
 import { HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import * as speakeasy from 'speakeasy';
+import { CustomHttpException } from '../../helpers/custom-http-filter';
 import * as SYS_MSG from '../../helpers/SystemMessages';
-import { JwtService } from '@nestjs/jwt';
-import { LoginResponseDto } from './dto/login-response.dto';
-import { CreateUserDTO } from './dto/create-user.dto';
-import UserService from '../user/user.service';
-import { Verify2FADto } from './dto/verify-2fa.dto';
-import { OtpService } from '../otp/otp.service';
 import { EmailService } from '../email/email.service';
+import { OtpDto } from '../otp/dto/otp.dto';
+import { OtpService } from '../otp/otp.service';
+import UserService from '../user/user.service';
+import { CreateUserDTO } from './dto/create-user.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { RequestSigninTokenDto } from './dto/request-signin-token.dto';
-import { OtpDto } from '../otp/dto/otp.dto';
+import { UpdatePasswordDto } from './dto/updatePasswordDto';
+import { Verify2FADto } from './dto/verify-2fa.dto';
 import { GoogleAuthService } from './google-auth.service';
 import GoogleAuthPayload from './interfaces/GoogleAuthPayloadInterface';
 import { GoogleVerificationPayloadInterface } from './interfaces/GoogleVerificationPayloadInterface';
-import { CustomHttpException } from '../../helpers/custom-http-filter';
-import { UpdatePasswordDto } from './dto/updatePasswordDto';
 
 @Injectable()
 export default class AuthenticationService {

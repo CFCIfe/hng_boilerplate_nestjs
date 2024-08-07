@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { OrganisationsService } from '../organisations/organisations.service';
 import { Profile } from '../profile/entities/profile.entity';
 import { DeactivateAccountDto } from './dto/deactivate-account.dto';
 import { UpdateUserDto } from './dto/update-user-dto';
@@ -22,6 +23,7 @@ import UserIdentifierOptionsType from './options/UserIdentifierOptions';
 @Injectable()
 export default class UserService {
   constructor(
+    private organisationsService: OrganisationsService,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @InjectRepository(Profile)
@@ -30,15 +32,29 @@ export default class UserService {
 
   async createUser(createUserPayload: CreateNewUserOptions): Promise<any> {
     const profile = await this.profileRepository.save({ email: createUserPayload.email, username: '' });
+
     const newUser = new User();
+
     Object.assign(newUser, createUserPayload);
+
     newUser.is_active = true;
+
     if (createUserPayload.admin_secret == process.env.ADMIN_SECRET_KEY) {
       newUser.user_type = UserType.SUPER_ADMIN;
     } else {
       newUser.user_type = UserType.USER;
     }
+
     newUser.profile = profile;
+
+    const userOrganisation = this.organisationsService.create(
+      {
+        name: `${newUser.first_name} ${newUser.last_name}`,
+        description: `${newUser.first_name} ${newUser.last_name}'s Organization`,
+        email: newUser.email,
+      },
+      newUser.id
+    );
     return await this.userRepository.save(newUser);
   }
 
